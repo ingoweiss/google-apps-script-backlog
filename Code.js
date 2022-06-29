@@ -1,6 +1,7 @@
 function exportStories() {
 
   var doc = DocumentApp.getActiveDocument();
+  var ui = DocumentApp.getUi()
   var body = doc.getBody();
 
    // Extract story headings:
@@ -12,14 +13,22 @@ function exportStories() {
   var regexp = /(?<id>[A-Z]+-[0-9]+): (?<name>.*)/
   var storyRaw = null
   var storyObj = null
+  var storyMatch = null
   var par = null
+  var errorCount = 0
   while (searchResult = body.findElement(searchType, searchResult)) {
     par = searchResult.getElement().asParagraph();
     if (par.getHeading() == searchHeading) {
       storyRaw = par.getText()
-      storyObj = storyRaw.match(regexp).groups
-      stories.push([storyRaw])
-      storiesJson.push(storyObj)
+      storyMatch = storyRaw.match(regexp)
+      if (storyMatch) {
+        storyObj = storyMatch.groups
+        stories.push([storyRaw])
+        storiesJson.push(storyObj)
+      } else {
+        errorCount ++;
+        Logger.log('Story "' + storyRaw + '" does not match REGEX pattern for stories.')
+      }
     }
   }
 
@@ -40,6 +49,16 @@ function exportStories() {
   }
   var blob = Utilities.newBlob(JSON.stringify(storiesJson), "application/vnd.google-apps.script+json");
   file = Drive.Files.insert(fileSets, blob)
+
+  // Display summary
+  var successMsg = stories.length + ' stories exported successfully.'
+  var errorMsg = null
+  if (errorCount > 0) {
+    errorMsg = errorCount + ' errors. See execution log for details.'
+  } else {
+    errorMsg = errorCount + ' errors.'
+  }
+  ui.alert(successMsg + '\n' + errorMsg)
 }
 
 function connectSpreadsheet(){
