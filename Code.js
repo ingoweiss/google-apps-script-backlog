@@ -37,33 +37,32 @@ function exportStories() {
     }
   }
 
-  // Export to Backlog Sheet
-  var pr = PropertiesService.getDocumentProperties();
-  var ss = SpreadsheetApp.openById(pr.getProperty('BacklogSheetID'));
-  var tab = ss.getSheetByName("Backlog Export");
-  var startRow = 2
-  var numRows = tab.getLastRow() - startRow + 1;
-  var range = tab.getRange(startRow, 1, numRows);
-  range.clear();
-  tab.getRange(startRow, 1, stories.length).setValues(stories)
+  if (errorCount == 0) {
+    // Export to Backlog Sheet
+    var pr = PropertiesService.getDocumentProperties();
+    var ss = SpreadsheetApp.openById(pr.getProperty('BacklogSheetID'));
+    var tab = ss.getSheetByName("Backlog Export");
+    var startRow = 2
+    var numRows = tab.getLastRow() - startRow + 1;
+    var range = tab.getRange(startRow, 1, numRows);
+    range.clear();
+    tab.getRange(startRow, 1, stories.length).setValues(stories)
 
-  // Export to JSON
-  var fileSets = {
-    title: doc.getName() + '.json',
-    mimeType: 'application/json'
-  }
-  var blob = Utilities.newBlob(JSON.stringify({"stories": storiesJson}), "application/vnd.google-apps.script+json");
-  file = Drive.Files.insert(fileSets, blob)
+    // Export to JSON
+    var fileSets = {
+      title: doc.getName() + '.json',
+      mimeType: 'application/json'
+    }
+    var blob = Utilities.newBlob(JSON.stringify({"stories": storiesJson}), "application/vnd.google-apps.script+json");
+    file = Drive.Files.insert(fileSets, blob)
 
-  // Display summary
-  var successMsg = stories.length + ' stories exported successfully.'
-  var errorMsg = null
-  if (errorCount > 0) {
-    errorMsg = errorCount + ' errors. See execution log for details.'
+    // Display summary
+    ui.alert(stories.length + ' stories exported successfully.')
+
   } else {
-    errorMsg = errorCount + ' errors.'
+    ui.alert('Unable to export (encountered ' + errorCount + ' errors). See execution log for details.')
   }
-  ui.alert(successMsg + '\n' + errorMsg)
+
 }
 
 function connectSpreadsheet(){
