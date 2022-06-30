@@ -9,7 +9,7 @@ function exportStories() {
   var searchHeading = DocumentApp.ParagraphHeading.HEADING3;
   var searchResult = null;
   var stories = []
-  var storiesJson = []
+  var storiesJson = {}
   var regexp = /(?<id>[A-Z]+-[0-9]+): (?<name>.*)/
   var storyRaw = null
   var storyObj = null
@@ -23,8 +23,13 @@ function exportStories() {
       storyMatch = storyRaw.match(regexp)
       if (storyMatch) {
         storyObj = storyMatch.groups
-        stories.push([storyRaw])
-        storiesJson.push(storyObj)
+        if (storyObj.id in storiesJson) {
+          errorCount ++;
+          Logger.log(Logger.log('ID "' + storyObj.id + '" for story "' + storyObj.name + '" is already in use.'))
+        } else {
+          storiesJson[storyObj.id] = storyObj
+          stories.push([storyRaw])
+        }
       } else {
         errorCount ++;
         Logger.log('Story "' + storyRaw + '" does not match REGEX pattern for stories.')
@@ -47,7 +52,7 @@ function exportStories() {
     title: doc.getName() + '.json',
     mimeType: 'application/json'
   }
-  var blob = Utilities.newBlob(JSON.stringify(storiesJson), "application/vnd.google-apps.script+json");
+  var blob = Utilities.newBlob(JSON.stringify({"stories": storiesJson}), "application/vnd.google-apps.script+json");
   file = Drive.Files.insert(fileSets, blob)
 
   // Display summary
