@@ -28,7 +28,7 @@ function exportStories() {
           Logger.log(Logger.log('ID "' + storyObj.id + '" for story "' + storyObj.name + '" is already in use.'))
         } else {
           storiesJson[storyObj.id] = storyObj
-          stories.push([storyRaw])
+          stories.push([storyObj.id, storyObj.name])
         }
       } else {
         errorCount ++;
@@ -44,9 +44,9 @@ function exportStories() {
     var tab = ss.getSheetByName("Backlog Export");
     var startRow = 2
     var numRows = tab.getLastRow() - startRow + 1;
-    var range = tab.getRange(startRow, 1, numRows);
+    var range = tab.getRange(startRow, 1, numRows, 2);
     range.clear();
-    tab.getRange(startRow, 1, stories.length).setValues(stories)
+    tab.getRange(startRow, 1, stories.length, 2).setValues(stories)
 
     // Export to JSON
     var fileSets = {
