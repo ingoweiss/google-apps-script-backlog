@@ -53,8 +53,8 @@ function exportStories() {
       title: doc.getName() + '.json',
       mimeType: 'application/json'
     }
-    var blob = Utilities.newBlob(JSON.stringify({"stories": storiesJson}), "application/vnd.google-apps.script+json");
-    file = Drive.Files.insert(fileSets, blob)
+    var blob = Utilities.newBlob(JSON.stringify({"stories": storiesJson}, null, 2), "application/vnd.google-apps.script+json");
+    var file = Drive.Files.insert(fileSets, blob)
 
     // Display summary
     ui.alert(stories.length + ' stories exported successfully.')
