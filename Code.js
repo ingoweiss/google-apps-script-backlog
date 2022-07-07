@@ -36,22 +36,24 @@ function exportStories() {
 
   if (errorCount == 0) {
     exportToBacklogSheet(stories);
-
-    // Export to JSON
-    const fileSets = {
-      title: doc.getName() + '.json',
-      mimeType: 'application/json'
-    }
-    const blob = Utilities.newBlob(JSON.stringify({"stories": storiesJson}, null, 2), "application/vnd.google-apps.script+json");
-    const file = Drive.Files.insert(fileSets, blob)
+    exportToJSON(storiesJson);
 
     // Display summary
     ui.alert(stories.length + ' stories exported successfully.')
-
   } else {
     ui.alert('Unable to export (encountered ' + errorCount + ' errors). See execution log for details.')
   }
 
+}
+
+function exportToJSON(stories){
+  const doc = DocumentApp.getActiveDocument();
+  const fileSets = {
+    title: doc.getName() + '.json',
+    mimeType: 'application/json'
+  }
+  const blob = Utilities.newBlob(JSON.stringify({"stories": stories}, null, 2), "application/vnd.google-apps.script+json");
+  const file = Drive.Files.insert(fileSets, blob)
 }
 
 function exportToBacklogSheet(stories){
