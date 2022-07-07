@@ -95,6 +95,6 @@ function onOpen() {
   ui.createMenu('Backlog')
       .addItem('Export Stories', 'exportStories')
       .addItem('Connect Spreadsheet', 'connectSpreadsheet')
-      .addItem('Open Spreadsheet', 'openSpreadsheet')
+      .addItem('Open Connected Spreadsheet', 'openSpreadsheet')
       .addToUi();
 }
