@@ -70,8 +70,10 @@ function exportToBacklogSheet(stories){
 function connectSpreadsheet(){
   const pr = PropertiesService.getDocumentProperties();
   const ui = DocumentApp.getUi();
-  const response = ui.prompt('Backlog Sheet ID', ui.ButtonSet.OK);
-  pr.setProperty('BacklogSheetID', response.getResponseText());
+  const response = ui.prompt('Backlog Sheet ID', ui.ButtonSet.OK_CANCEL);
+  if (response.getSelectedButton() == ui.Button.OK) {
+    pr.setProperty('BacklogSheetID', response.getResponseText());
+  }
 }
 
 function openSpreadsheet(){
