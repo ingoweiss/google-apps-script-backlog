@@ -35,15 +35,7 @@ function exportStories() {
   }
 
   if (errorCount == 0) {
-    // Export to Backlog Sheet
-    const pr = PropertiesService.getDocumentProperties();
-    const ss = SpreadsheetApp.openById(pr.getProperty('BacklogSheetID'));
-    const tab = ss.getSheetByName("Backlog Export");
-    const startRow = 2
-    const numRows = tab.getLastRow() - startRow + 1;
-    const range = tab.getRange(startRow, 1, numRows, 2);
-    range.clear();
-    tab.getRange(startRow, 1, stories.length, 2).setValues(stories)
+    exportToBacklogSheet(stories);
 
     // Export to JSON
     const fileSets = {
@@ -60,6 +52,17 @@ function exportStories() {
     ui.alert('Unable to export (encountered ' + errorCount + ' errors). See execution log for details.')
   }
 
+}
+
+function exportToBacklogSheet(stories){
+    const pr = PropertiesService.getDocumentProperties();
+    const ss = SpreadsheetApp.openById(pr.getProperty('BacklogSheetID'));
+    const tab = ss.getSheetByName("Backlog Export");
+    const startRow = 2
+    const numRows = tab.getLastRow() - startRow + 1;
+    const range = tab.getRange(startRow, 1, numRows, 2);
+    range.clear();
+    tab.getRange(startRow, 1, stories.length, 2).setValues(stories)
 }
 
 function connectSpreadsheet(){
