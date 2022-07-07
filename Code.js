@@ -1,25 +1,22 @@
 function exportStories() {
 
-  var doc = DocumentApp.getActiveDocument();
-  var ui = DocumentApp.getUi()
-  var body = doc.getBody();
+  const doc = DocumentApp.getActiveDocument();
+  const ui = DocumentApp.getUi()
+  const body = doc.getBody();
 
    // Extract story headings:
-  var searchType = DocumentApp.ElementType.PARAGRAPH;
-  var searchHeading = DocumentApp.ParagraphHeading.HEADING3;
-  var searchResult = null;
-  var stories = []
-  var storiesJson = {}
-  var regexp = /(?<id>[A-Z]+-[0-9]+): (?<name>.*)/
-  var storyRaw = null
-  var storyObj = null
-  var storyMatch = null
-  var par = null
-  var errorCount = 0
+  const searchType = DocumentApp.ElementType.PARAGRAPH;
+  const searchHeading = DocumentApp.ParagraphHeading.HEADING3;
+  let searchResult = null;
+  const stories = []
+  const storiesJson = {}
+  const regexp = /(?<id>[A-Z]+-[0-9]+): (?<name>.*)/
+  let paragraph, storyRaw, storyObj, storyMatch
+  let errorCount = 0
   while (searchResult = body.findElement(searchType, searchResult)) {
-    par = searchResult.getElement().asParagraph();
-    if (par.getHeading() == searchHeading) {
-      storyRaw = par.getText()
+    paragraph = searchResult.getElement().asParagraph();
+    if (paragraph.getHeading() == searchHeading) {
+      storyRaw = paragraph.getText()
       storyMatch = storyRaw.match(regexp)
       if (storyMatch) {
         storyObj = storyMatch.groups
@@ -39,22 +36,22 @@ function exportStories() {
 
   if (errorCount == 0) {
     // Export to Backlog Sheet
-    var pr = PropertiesService.getDocumentProperties();
-    var ss = SpreadsheetApp.openById(pr.getProperty('BacklogSheetID'));
-    var tab = ss.getSheetByName("Backlog Export");
-    var startRow = 2
-    var numRows = tab.getLastRow() - startRow + 1;
-    var range = tab.getRange(startRow, 1, numRows, 2);
+    const pr = PropertiesService.getDocumentProperties();
+    const ss = SpreadsheetApp.openById(pr.getProperty('BacklogSheetID'));
+    const tab = ss.getSheetByName("Backlog Export");
+    const startRow = 2
+    const numRows = tab.getLastRow() - startRow + 1;
+    const range = tab.getRange(startRow, 1, numRows, 2);
     range.clear();
     tab.getRange(startRow, 1, stories.length, 2).setValues(stories)
 
     // Export to JSON
-    var fileSets = {
+    const fileSets = {
       title: doc.getName() + '.json',
       mimeType: 'application/json'
     }
-    var blob = Utilities.newBlob(JSON.stringify({"stories": storiesJson}, null, 2), "application/vnd.google-apps.script+json");
-    var file = Drive.Files.insert(fileSets, blob)
+    const blob = Utilities.newBlob(JSON.stringify({"stories": storiesJson}, null, 2), "application/vnd.google-apps.script+json");
+    const file = Drive.Files.insert(fileSets, blob)
 
     // Display summary
     ui.alert(stories.length + ' stories exported successfully.')
@@ -66,28 +63,28 @@ function exportStories() {
 }
 
 function connectSpreadsheet(){
-  var pr = PropertiesService.getDocumentProperties();
-  var ui = DocumentApp.getUi();
-  var response = ui.prompt('Backlog Sheet ID', ui.ButtonSet.OK);
+  const pr = PropertiesService.getDocumentProperties();
+  const ui = DocumentApp.getUi();
+  const response = ui.prompt('Backlog Sheet ID', ui.ButtonSet.OK);
   pr.setProperty('BacklogSheetID', response.getResponseText());
 }
 
 function openSpreadsheet(){
-  var pr = PropertiesService.getDocumentProperties();
-  var ss = SpreadsheetApp.openById(pr.getProperty('BacklogSheetID'));
-  var url = ss.getUrl();
+  const pr = PropertiesService.getDocumentProperties();
+  const ss = SpreadsheetApp.openById(pr.getProperty('BacklogSheetID'));
+  const url = ss.getUrl();
   openURL(url);
 }
 
 function openURL(url){
-  var html = "<script>window.open('" + url + "');google.script.host.close();</script>";
-  var output = HtmlService.createHtmlOutput(html).setHeight(10).setWidth(80);
-  var ui = DocumentApp.getUi();
+  const html = "<script>window.open('" + url + "');google.script.host.close();</script>";
+  const output = HtmlService.createHtmlOutput(html).setHeight(10).setWidth(80);
+  const ui = DocumentApp.getUi();
   ui.showModalDialog(output, 'Opening...');
 }
 
 function onOpen() {
-  var ui = DocumentApp.getUi();
+  const ui = DocumentApp.getUi();
   ui.createMenu('Backlog')
       .addItem('Export Stories', 'exportStories')
       .addItem('Connect Spreadsheet', 'connectSpreadsheet')
