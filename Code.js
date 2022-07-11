@@ -47,13 +47,25 @@ function exportStories() {
 }
 
 function exportToJSON(stories){
+  const pr = PropertiesService.getDocumentProperties();
   const doc = DocumentApp.getActiveDocument();
+  const jsonFileID = pr.getProperty('jsonFileID');
+  let jsonFile;
+  if (jsonFileID) {
+    jsonFile = DriveApp.getFileById(jsonFileID);
+  }
   const fileSets = {
     title: doc.getName() + '.json',
     mimeType: 'application/json'
   }
   const blob = Utilities.newBlob(JSON.stringify({"stories": stories}, null, 2), "application/vnd.google-apps.script+json");
-  const file = Drive.Files.insert(fileSets, blob)
+
+  if (jsonFileID && jsonFile && !jsonFile.isTrashed()) {
+    Drive.Files.update(fileSets, jsonFileID, blob);
+  } else {
+    jsonFile = Drive.Files.insert(fileSets, blob);
+    pr.setProperty('jsonFileID', jsonFile.getId());
+  }
 }
 
 function exportToBacklogSheet(stories){
