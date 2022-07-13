@@ -17,7 +17,7 @@ The following needs to be satisfied for the "Export Stories" command to work cor
 1. The "Connect Spreadsheet" command needs to be run
 2. The connected Google Sheet needs to have a "Backlog Export" tab with a header row ("ID" and "Name")
 3. Story titles need to be formated as a level 3 heading
-4. Story titles need to be in the format "[ID]: [Name]" (Example: "US123: User Logs In")
+4. Story titles need to be in the format "[PREFIX]-[NUMBER]: [Name]" (Example: "ACCOUNT-01: User Logs In")
 
 *The JSON file is created using the base name of the Google Doc, at the top level Google Drive. After the first export, the export file can be moved into any folder and the script should continue to work
 
