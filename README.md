@@ -5,11 +5,10 @@ A Google Doc is a very flexible format for creating an (initial) backlog. Howeve
 This script adds menu commands to a Google Doc backlog that help with a multi-doc backlog workflow.
 
 ## Menu Commands:
-
 ### Backlog > Export Stories
 
 1. Exports story data (ID and name) to the "Backlog Export" tab of a connected spreadsheet
-2. Exports story data (ID and name) to a JSON file
+2. Exports story data (ID and name) to a JSON file*
 
 The following needs to be satisfied for the "Export Stories" command to work correctly:
 
@@ -18,9 +17,7 @@ The following needs to be satisfied for the "Export Stories" command to work cor
 3. Story titles need to be formated as a level 3 heading
 4. Story titles need to be in the format "[ID]: [Name]" (Example: "US123: User Logs In")
 
-Notes:
-
-1. The JSON file is created using the base name of the Google Doc, at the top level Google Drive. After the first export, the export file can be moved into any folder and the script should continue to work
+*The JSON file is created using the base name of the Google Doc, at the top level Google Drive. After the first export, the export file can be moved into any folder and the script should continue to work
 
 ### Backlog > Connect Spreadsheet
 
