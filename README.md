@@ -1,6 +1,8 @@
 # Google Apps Script Backlog Utilities
 
-A Google Doc is a very flexible format for creating an (initial) backlog. However, estimation and resourcing are better done in in a spreadsheet. For other tasks such as milestone planning and user story mapping one might want to use yet another tool. It is cumbersome and error prone to keep two or more documents in sync.
+A Google Doc is a very flexible format for creating and evolving an (initial) backlog.
+
+However, one might want to use the backlog data in other tools to visualize (user story mapping etc.) or enrich (estimation, resourcing etc.) the backlog. It is cumbersome and error prone to keep multiple documents in sync.
 
 This script adds menu commands to a Google Doc backlog that help with a multi-doc backlog workflow.
 
